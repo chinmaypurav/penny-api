@@ -4,47 +4,48 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
+use App\Models\User;
+use App\Services\CategoryService;
 
 class CategoryController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    protected User $user;
+
+    public function __construct(protected CategoryService $categoryService)
+    {
+        $this->authorizeResource(Category::class);
+        $this->middleware(function ($request, $next) {
+            $this->user = auth()->user();
+            return $next($request);
+        });
+    }
+
     public function index()
     {
-        //
+        return CategoryResource::collection($this->categoryService->index($this->user));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(StoreCategoryRequest $request)
     {
-        //
+        return CategoryResource::make($this->categoryService->store($this->user, $request->validated()));
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show(Category $category)
     {
-        //
+        return CategoryResource::make($category);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
     public function update(UpdateCategoryRequest $request, Category $category)
     {
-        //
+        return CategoryResource::make($this->categoryService->update($category, $request->validated()));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Category $category)
     {
-        //
+        $this->categoryService->destroy($category);
+
+        return response()->noContent();
     }
 }
