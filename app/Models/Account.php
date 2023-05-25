@@ -14,7 +14,6 @@ class Account extends Model
     protected $fillable = ['name', 'account_type', 'balance'];
 
     protected $casts = [
-        'account_type' => AccountType::class,
         'balance' => 'double',
     ];
 
