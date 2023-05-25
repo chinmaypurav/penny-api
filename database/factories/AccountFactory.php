@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\AccountType;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -16,7 +17,7 @@ class AccountFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => fake()->word(),
-            'account_type' => fake()->randomElement(['SAVINGS', 'CURRENT', 'CREDIT', 'TRADING']),
+            'account_type' => fake()->randomElement(AccountType::all()),
             'balance' => fake()->numberBetween(0, 10000),
         ];
     }
