@@ -14,6 +14,7 @@ return new class extends Migration
     {
         Schema::create('accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->enum('accounty_type', AccountType::all())->default('SAVINGS');
             $table->decimal('balance', 16)->default(0);
