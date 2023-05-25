@@ -15,6 +15,7 @@ class Account extends Model
 
     protected $casts = [
         'account_type' => AccountType::class,
+        'balance' => 'double',
     ];
 
     public function user(): BelongsTo
