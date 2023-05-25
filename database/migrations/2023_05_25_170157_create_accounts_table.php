@@ -16,7 +16,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
-            $table->enum('accounty_type', AccountType::all())->default('SAVINGS');
+            $table->enum('accounty_type', AccountType::all())->default(AccountType::SAVINGS->value);
             $table->decimal('balance', 16)->default(0);
             $table->timestamps();
         });
