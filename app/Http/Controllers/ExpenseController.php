@@ -9,7 +9,7 @@ use App\Models\Expense;
 use App\Models\User;
 use App\Services\ExpenseService;
 
-class AccountController extends Controller
+class ExpenseController extends Controller
 {
     protected User $user;
 

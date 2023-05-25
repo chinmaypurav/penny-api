@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\ExpenseController;
+use App\Http\Controllers\IncomeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,4 +30,6 @@ Route::group([
     Route::post('logout', [LoginController::class, 'logout']);
     Route::apiResource('accounts', AccountController::class);
     Route::apiResource('categories', CategoryController::class);
+    Route::apiResource('incomes', IncomeController::class);
+    Route::apiResource('expenses', ExpenseController::class);
 });
