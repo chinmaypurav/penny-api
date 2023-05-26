@@ -23,6 +23,7 @@ class IncomeFactory extends Factory
             'user_id' => User::factory(),
             'account_id' => Account::factory(),
             'category_id' => Category::factory(),
+            'transacted_at' => fake()->date(),
             'description' => fake()->word(),
             'amount' => fake()->numberBetween(0, 10000),
         ];
