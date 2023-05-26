@@ -17,6 +17,7 @@ return new class extends Migration
             $table->foreignId('account_id')->constrained();
             $table->foreignId('category_id')->nullable()->constrained();
             $table->string('description');
+            $table->dateTime('transacted_at');
             $table->decimal('amount', 16)->default(0);
             $table->timestamps();
         });

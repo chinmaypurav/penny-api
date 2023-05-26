@@ -10,7 +10,11 @@ class Income extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['account_id', 'category_id', 'description', 'amount'];
+    protected $fillable = ['account_id', 'category_id', 'description', 'transacted_at', 'amount'];
+
+    protected $casts = [
+        'transacted_at' => 'datetime',
+    ];
 
     public function user(): BelongsTo
     {
