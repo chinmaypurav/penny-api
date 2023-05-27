@@ -23,15 +23,15 @@ class ExpenseService
 
     public function update(Expense $expense, array $input): Expense
     {
-        return  DB::transaction(
+        return DB::transaction(
             fn () => tap($expense, fn (Expense $expense) => $expense->update($input))
         );
     }
 
     public function destroy(Expense $expense): Expense
     {
-        return  DB::transaction(
-            fn () =>  tap($expense, fn (Expense $expense) => $expense->delete())
+        return DB::transaction(
+            fn () => tap($expense, fn (Expense $expense) => $expense->delete())
         );
     }
 }

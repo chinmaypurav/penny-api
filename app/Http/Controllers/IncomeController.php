@@ -18,6 +18,7 @@ class IncomeController extends Controller
         $this->authorizeResource(Income::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
+
             return $next($request);
         });
     }

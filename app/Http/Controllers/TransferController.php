@@ -18,6 +18,7 @@ class TransferController extends Controller
         $this->authorizeResource(Transfer::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
+
             return $next($request);
         });
     }

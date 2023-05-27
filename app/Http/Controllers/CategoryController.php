@@ -18,6 +18,7 @@ class CategoryController extends Controller
         $this->authorizeResource(Category::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
+
             return $next($request);
         });
     }

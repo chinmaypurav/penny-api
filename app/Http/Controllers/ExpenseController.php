@@ -18,6 +18,7 @@ class ExpenseController extends Controller
         $this->authorizeResource(Account::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
+
             return $next($request);
         });
     }
