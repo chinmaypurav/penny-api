@@ -10,7 +10,7 @@ class Transfer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['creditor_id', 'debitor_id', 'description', 'transaction_id'];
+    protected $fillable = ['creditor_id', 'debitor_id', 'amount', 'description', 'transaction_id'];
 
     public function creditorAccount(): BelongsTo
     {

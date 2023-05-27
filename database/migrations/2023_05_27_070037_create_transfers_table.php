@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('creditor_id')->constrained('accounts');
             $table->foreignId('debitor_id')->constrained('accounts');
+            $table->decimal('amount', 16);
             $table->string('description')->nullable();
             $table->string('transaction_id')->nullable()->index();
             $table->timestamps();
