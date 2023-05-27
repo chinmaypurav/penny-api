@@ -16,7 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('account_id')->constrained();
             $table->foreignId('category_id')->nullable()->constrained();
-            $table->dateTime('transacted_at');
+            $table->dateTime('scheduled_at')->nullable();
+            $table->dateTime('transacted_at')->nullable();
+            $table->boolean('completed')->default(false);
             $table->string('description');
             $table->decimal('amount', 16)->default(0);
             $table->timestamps();

@@ -10,10 +10,12 @@ class Expense extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['account_id', 'category_id', 'description', 'transacted_at', 'amount'];
+    protected $fillable = ['account_id', 'category_id', 'description', 'transacted_at', 'scheduled_at', 'completed', 'amount'];
 
     protected $casts = [
         'transacted_at' => 'datetime',
+        'scheduled_at' => 'datetime',
+        'completed' => 'true',
     ];
 
     public function user(): BelongsTo
