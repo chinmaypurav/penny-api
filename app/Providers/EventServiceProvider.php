@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Expense;
 use App\Models\Income;
+use App\Models\Transfer;
 use App\Observers\ExpenseObserver;
 use App\Observers\IncomeObserver;
+use App\Observers\TransferObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -31,6 +33,7 @@ class EventServiceProvider extends ServiceProvider
     {
         Income::observe(IncomeObserver::class);
         Expense::observe(ExpenseObserver::class);
+        Transfer::observe(TransferObserver::class);
     }
 
     /**
