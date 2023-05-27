@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Expense;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class ExpenseService
 {
@@ -15,16 +16,22 @@ class ExpenseService
 
     public function store(User $user, array $input): Expense
     {
-        return $user->expenses()->create($input);
+        return DB::transaction(
+            fn () => $user->expenses()->create($input)
+        );
     }
 
     public function update(Expense $expense, array $input): Expense
     {
-        return tap($expense, fn (Expense $expense) => $expense->update($input));
+        return  DB::transaction(
+            fn () => tap($expense, fn (Expense $expense) => $expense->update($input))
+        );
     }
 
     public function destroy(Expense $expense): Expense
     {
-        return tap($expense, fn (Expense $expense) => $expense->delete());
+        return  DB::transaction(
+            fn () =>  tap($expense, fn (Expense $expense) => $expense->delete())
+        );
     }
 }

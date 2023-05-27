@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 
 class CategoryService
 {
@@ -15,16 +16,22 @@ class CategoryService
 
     public function store(User $user, array $input): Category
     {
-        return $user->categories()->create($input);
+        return DB::transaction(
+            fn () => $user->categories()->create($input)
+        );
     }
 
     public function update(Category $category, array $input): Category
     {
-        return tap($category, fn (Category $category) => $category->update($input));
+        return DB::transaction(
+            fn () => tap($category, fn (Category $category) => $category->update($input))
+        );
     }
 
     public function destroy(Category $category): Category
     {
-        return tap($category, fn (Category $category) => $category->delete());
+        return DB::transaction(
+            fn () => tap($category, fn (Category $category) => $category->delete())
+        );
     }
 }
