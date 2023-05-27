@@ -34,4 +34,14 @@ class AccountService
             fn () => tap($account, fn (Account $account) => $account->delete())
         );
     }
+
+    public function increment(Account $account, float $amount): Account
+    {
+        return tap($account, fn (Account $account) => $account->increment('balance', $amount));
+    }
+
+    public function decrement(Account $account, float $amount): Account
+    {
+        return tap($account, fn (Account $account) => $account->decrement('balance', $amount));
+    }
 }
