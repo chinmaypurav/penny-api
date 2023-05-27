@@ -9,11 +9,11 @@ class UpdateIncomeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'account_id' => ['required', 'integer', 'exists:accounts,id'],
-            'category_id' => ['required', 'integer', 'exists:categories,id'],
-            'transacted_at' => ['required', 'date'],
-            'description' => ['required', 'string', 'max:255'],
-            'amount' => ['required', 'numeric'],
+            'account_id' => ['sometimes', 'required', 'integer', 'exists:accounts,id'],
+            'category_id' => ['sometimes', 'required', 'integer', 'exists:categories,id'],
+            'transacted_at' => ['sometimes', 'required', 'date'],
+            'description' => ['sometimes', 'required', 'string', 'max:255'],
+            'amount' => ['sometimes', 'required', 'numeric'],
         ];
     }
 }
