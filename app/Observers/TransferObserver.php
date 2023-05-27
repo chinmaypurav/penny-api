@@ -12,6 +12,21 @@ class TransferObserver
         $transfer->creditorAccount()->increment('balance', $transfer->amount);
     }
 
+    public function updating(Transfer $transfer): void
+    {
+        if ($transfer->isClean('amount')) {
+            return;
+        }
+
+        $orginalAmount = $transfer->getOriginal('amount');
+        $modifiedAmount = $transfer->getAttribute('amount');
+
+        $diff = $orginalAmount - $modifiedAmount;
+
+        $transfer->debitorAccount()->increment('balance', $diff);
+        $transfer->creditorAccount()->decrement('balance', $diff);
+    }
+
     public function deleted(Transfer $transfer): void
     {
         $transfer->debitorAccount()->increment('balance', $transfer->amount);
