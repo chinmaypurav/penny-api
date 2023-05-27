@@ -7,6 +7,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\TransferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,4 +33,5 @@ Route::group([
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('incomes', IncomeController::class);
     Route::apiResource('expenses', ExpenseController::class);
+    Route::apiResource('transfers', TransferController::class);
 });
