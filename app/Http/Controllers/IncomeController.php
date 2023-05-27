@@ -15,7 +15,7 @@ class IncomeController extends Controller
 
     public function __construct(protected IncomeService $incomeService)
     {
-        $this->authorizeResource(Account::class);
+        $this->authorizeResource(Income::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
             return $next($request);
