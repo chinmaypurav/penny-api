@@ -23,6 +23,16 @@ class Account extends Model
         return $this->belongsTo(User::class);
     }
 
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(Income::class);
+    }
+
+    public function expenses(): HasMany
+    {
+        return $this->hasMany(Expense::class);
+    }
+
     public function creditTranfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'creditor_id');
