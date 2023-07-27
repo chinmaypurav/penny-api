@@ -11,7 +11,7 @@ class IncomeService
 {
     public function index(User $user): Collection
     {
-        return $user->incomes()->get();
+        return $user->incomes()->with(['account', 'category'])->get();
     }
 
     public function store(User $user, array $input): Income

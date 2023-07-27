@@ -14,7 +14,9 @@ class IncomeResource extends JsonResource
         return [
             'id' => $this->id,
             'account_id' => $this->account_id,
+            'account' => AccountResource::make($this->whenLoaded('account')),
             'category_id' => $this->category_id,
+            'category' => CategoryResource::make($this->whenLoaded('category')),
             'description' => $this->description,
             'amount' => number_format($this->amount, 2),
             'created_at' => $this->created_at,
