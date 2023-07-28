@@ -4,8 +4,8 @@ namespace App\Enums;
 
 enum CategoryType: string
 {
-    case INCOME = 'Income';
-    case EXPENSE = 'Expense';
+    case INCOME = 'income';
+    case EXPENSE = 'expense';
 
     public static function all(): array
     {
