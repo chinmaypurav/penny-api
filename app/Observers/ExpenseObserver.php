@@ -19,7 +19,7 @@ class ExpenseObserver
 
     public function created(Expense $expense): void
     {
-        $this->accountService->increment($expense->account, $expense->amount);
+        $this->accountService->decrement($expense->account, $expense->amount);
     }
 
     public function updating(Expense $expense): void
