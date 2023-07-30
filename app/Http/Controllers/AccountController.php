@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreAccountRequest;
 use App\Http\Requests\UpdateAccountRequest;
+use App\Http\Resources\AccountCollection;
 use App\Http\Resources\AccountResource;
 use App\Models\Account;
 use App\Models\User;
@@ -25,7 +26,7 @@ class AccountController extends Controller
 
     public function index()
     {
-        return AccountResource::collection($this->accountService->index($this->user));
+        return AccountCollection::make($this->accountService->index($this->user));
     }
 
     public function store(StoreAccountRequest $request)
