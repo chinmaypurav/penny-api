@@ -10,7 +10,7 @@ class Transfer extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['creditor_id', 'debitor_id', 'amount', 'transacted_at', 'scheduled_at', 'completed', 'description', 'transaction_id'];
+    protected $fillable = ['creditor_id', 'debtor_id', 'amount', 'transacted_at', 'scheduled_at', 'completed', 'description', 'transaction_id'];
 
     protected $casts = [
         'transacted_at' => 'datetime',

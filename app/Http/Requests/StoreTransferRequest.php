@@ -10,7 +10,7 @@ class StoreTransferRequest extends FormRequest
     {
         return [
             'creditor_id' => ['required', 'integer', 'exists:accounts,id'],
-            'debitor_id' => ['required', 'integer', 'exists:accounts,id'],
+            'debtor_id' => ['required', 'integer', 'exists:accounts,id'],
             'amount' => ['required', 'numeric'],
             'transacted_at' => ['required', 'date'],
             'description' => ['required', 'string', 'max:255'],

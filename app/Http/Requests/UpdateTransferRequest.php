@@ -10,7 +10,7 @@ class UpdateTransferRequest extends FormRequest
     {
         return [
             'creditor_id' => ['sometimes', 'required', 'integer', 'exists:accounts,id'],
-            'debitor_id' => ['sometimes', 'required', 'integer', 'exists:accounts,id'],
+            'debtor_id' => ['sometimes', 'required', 'integer', 'exists:accounts,id'],
             'amount' => ['sometimes', 'required', 'numeric'],
             'transacted_at' => ['sometimes', 'required', 'date'],
             'description' => ['sometimes', 'required', 'string', 'max:255'],
