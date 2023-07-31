@@ -9,10 +9,4 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 class TransferCollection extends ResourceCollection
 {
     public static $wrap = 'transfers';
-    public function toArray(Request $request): array
-    {
-        return [
-            'data' => $this->collection,
-        ];
-    }
 }
