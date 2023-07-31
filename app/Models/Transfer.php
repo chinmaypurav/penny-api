@@ -23,7 +23,7 @@ class Transfer extends Model
         return $this->belongsTo(Account::class, 'creditor_id');
     }
 
-    public function debitorAccount(): BelongsTo
+    public function debtorAccount(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'debitor_id');
     }

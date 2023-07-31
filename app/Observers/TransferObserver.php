@@ -8,7 +8,7 @@ class TransferObserver
 {
     public function created(Transfer $transfer): void
     {
-        $transfer->debitorAccount()->decrement('balance', $transfer->amount);
+        $transfer->debtorAccount()->decrement('balance', $transfer->amount);
         $transfer->creditorAccount()->increment('balance', $transfer->amount);
     }
 
@@ -23,13 +23,13 @@ class TransferObserver
 
         $diff = $orginalAmount - $modifiedAmount;
 
-        $transfer->debitorAccount()->increment('balance', $diff);
+        $transfer->debtorAccount()->increment('balance', $diff);
         $transfer->creditorAccount()->decrement('balance', $diff);
     }
 
     public function deleted(Transfer $transfer): void
     {
-        $transfer->debitorAccount()->increment('balance', $transfer->amount);
+        $transfer->debtorAccount()->increment('balance', $transfer->amount);
         $transfer->creditorAccount()->decrement('balance', $transfer->amount);
     }
 }
