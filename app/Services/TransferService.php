@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class TransferService
 {
-    public function index(User $user): Collection
+    public function index(User $user, array $params): Collection
     {
         return $user->transfers()->get();
     }

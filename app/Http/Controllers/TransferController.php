@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\IndexTransferRequest;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
+use App\Http\Resources\TransferCollection;
 use App\Http\Resources\TransferResource;
 use App\Models\Transfer;
 use App\Models\User;
@@ -23,9 +25,9 @@ class TransferController extends Controller
         });
     }
 
-    public function index()
+    public function index(IndexTransferRequest $request)
     {
-        return TransferResource::collection($this->transferService->index($this->user));
+        return TransferCollection::make($this->transferService->index($this->user, $request->input()));
     }
 
     public function store(StoreTransferRequest $request)
