@@ -16,6 +16,7 @@ class TransferResource extends JsonResource
             'description' => $this->description,
             'creditor' => AccountResource::make($this->creditorAccount),
             'debtor' => AccountResource::make($this->debtorAccount),
+            'amount' => $this->amount,
             'transacted_at' => $this->transacted_at,
         ];
     }
