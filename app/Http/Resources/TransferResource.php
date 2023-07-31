@@ -9,13 +9,14 @@ use Illuminate\Http\Resources\Json\JsonResource;
 /** @mixin Transfer */
 class TransferResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
-        return parent::toArray($request);
+        return [
+            'id' => $this->id,
+            'description' => $this->description,
+            'creditor' => AccountResource::make($this->creditorAccount),
+            'debtor' => AccountResource::make($this->debtorAccount),
+            'transacted_at' => $this->transacted_at,
+        ];
     }
 }
