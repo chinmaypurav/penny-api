@@ -15,7 +15,7 @@ class Transfer extends Model
     protected $casts = [
         'transacted_at' => 'datetime',
         'scheduled_at' => 'datetime',
-        'completed' => 'true',
+        'completed' => 'boolean',
     ];
 
     public function creditorAccount(): BelongsTo
@@ -25,6 +25,6 @@ class Transfer extends Model
 
     public function debtorAccount(): BelongsTo
     {
-        return $this->belongsTo(Account::class, 'debitor_id');
+        return $this->belongsTo(Account::class, 'debtor_id');
     }
 }
