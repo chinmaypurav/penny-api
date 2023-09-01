@@ -28,10 +28,10 @@ class IncomeObserver
             $this->changeSign($income);
         }
 
-        $orginalAmount = $income->getOriginal('amount');
+        $originalAmount = $income->getOriginal('amount');
         $modifiedAmount = $income->getAttribute('amount');
 
-        $diff = $orginalAmount - $modifiedAmount;
+        $diff = $originalAmount - $modifiedAmount;
 
         $this->accountService->decrement($income->account, $diff);
     }
