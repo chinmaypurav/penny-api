@@ -16,7 +16,7 @@ class ExpenseController extends Controller
 
     public function __construct(protected ExpenseService $expenseService)
     {
-        $this->authorizeResource(Account::class);
+        $this->authorizeResource(Expense::class);
         $this->middleware(function ($request, $next) {
             $this->user = auth()->user();
 
