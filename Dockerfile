@@ -7,9 +7,9 @@ RUN mkdir -p /var/www/html
 
 RUN apt update -y
 
-RUN apt install git curl zip unzip libzip-dev sqlite3 -y
+RUN apt install git curl zip unzip libzip-dev libpq-dev sqlite3 -y
 
-RUN docker-php-ext-install pdo pdo_mysql exif zip bcmath
+RUN docker-php-ext-install pdo pdo_pgsql exif zip bcmath
 
 WORKDIR /var/www/html/
 
