@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
@@ -17,7 +17,7 @@ class LoginController extends Controller
         $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', Password::defaults()],
-            'device_name' => ['required', 'string'],
+            //            'device_name' => ['required', 'string'],
         ]);
 
         $user = User::where('email', $request->email)->first();
@@ -28,24 +28,17 @@ class LoginController extends Controller
             ]);
         }
 
-        $token = $user->createToken($request->device_name)->plainTextToken;
+        Auth::login($user);
 
-        return (new UserResource($user))
-            ->additional([
-                'token' => $token,
-            ]);
+        return response()->noContent();
     }
 
     public function logout(Request $request)
     {
-        if ($request->boolean('all')) {
-            $request->user()->tokens()->delete();
-
-            return response()->noContent();
-        }
-
-        $request->user()->currentAccessToken()->delete();
+        Auth::logout();
+        session()->regenerate();
 
         return response()->noContent();
+        //        return response()->redirectTo('login');
     }
 }
