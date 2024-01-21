@@ -2,10 +2,10 @@
 
 namespace App\Http\Resources;
 
-use Illuminate\Http\Request;
+use App\Models\Transfer;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
-/** @see \App\Models\Transfer */
+/** @see Transfer */
 class TransferCollection extends ResourceCollection
 {
     public static $wrap = 'transfers';
