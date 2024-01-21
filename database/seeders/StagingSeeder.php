@@ -9,7 +9,7 @@ class StagingSeeder extends Seeder
 {
     public function run(): void
     {
-        if (!User::count()) {
+        if (! User::count()) {
             return;
         }
 
