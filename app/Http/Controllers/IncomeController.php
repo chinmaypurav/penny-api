@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexIncomeRequest;
 use App\Http\Requests\StoreIncomeRequest;
 use App\Http\Requests\UpdateIncomeRequest;
+use App\Http\Resources\IncomeCollection;
 use App\Http\Resources\IncomeResource;
 use App\Models\Income;
 use App\Models\User;
@@ -26,7 +27,7 @@ class IncomeController extends Controller
 
     public function index(IndexIncomeRequest $request)
     {
-        return IncomeResource::collection($this->incomeService->index($this->user, $request->input()));
+        return IncomeCollection::make($this->incomeService->index($this->user, $request->input()));
     }
 
     public function store(StoreIncomeRequest $request)
