@@ -19,7 +19,7 @@ class ExpenseResource extends JsonResource
             'category' => CategoryResource::make($this->whenLoaded('category')),
             'description' => $this->description,
             'amount' => number_format($this->amount, 2),
-            'created_at' => $this->created_at,
+            'transacted_at' => $this->transacted_at,
         ];
     }
 }
