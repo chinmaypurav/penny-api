@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCategoryRequest;
 use App\Http\Requests\UpdateCategoryRequest;
+use App\Http\Resources\CategoryCollection;
 use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use App\Models\User;
@@ -25,7 +26,7 @@ class CategoryController extends Controller
 
     public function index()
     {
-        return CategoryResource::collection($this->categoryService->index($this->user));
+        return CategoryCollection::make($this->categoryService->index($this->user));
     }
 
     public function store(StoreCategoryRequest $request)
