@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\IndexExpenseRequest;
 use App\Http\Requests\StoreExpenseRequest;
 use App\Http\Requests\UpdateExpenseRequest;
+use App\Http\Resources\ExpenseCollection;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
@@ -26,7 +27,7 @@ class ExpenseController extends Controller
 
     public function index(IndexExpenseRequest $request)
     {
-        return ExpenseResource::collection($this->expenseService->index($this->user, $request->input()));
+        return ExpenseCollection::make($this->expenseService->index($this->user, $request->input()));
     }
 
     public function store(StoreExpenseRequest $request)
