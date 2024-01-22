@@ -1,3 +1,3 @@
-php artisan migrate --seed --force
+php artisan migrate:fresh --seed --force
 
 apache2-foreground
