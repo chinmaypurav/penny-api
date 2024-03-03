@@ -17,8 +17,8 @@ class TransactionResource extends JsonResource
     {
         return [
             'transaction_type' => class_basename(get_class($this->resource)),
-            'account' => $this->whenLoaded('account', fn () => $this->account->name),
-            'category' => $this->whenLoaded('category', fn () => $this->category->name),
+            'account_name' => $this->whenLoaded('account', fn () => $this->account->name),
+            'category_name' => $this->whenLoaded('category', fn () => $this->category->name),
             'description' => $this->description,
             'amount' => number_format($this->amount, 2),
             'transacted_at' => $this->transacted_at,
