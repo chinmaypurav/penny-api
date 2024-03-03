@@ -4,23 +4,20 @@ namespace App\Services;
 
 use App\Models\Income;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\DB;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class IncomeService
 {
-    public function index(User $user, array $params = []): Collection
+    public function index(User $user): Collection
     {
-        return $user->incomes()
-            ->when($params,
-                fn (Builder $q) => $q->when($from = Arr::get($params, 'date_from'),
-                    fn (Builder $q) => $q->whereDate('transacted_at', '>=', $from)
-                )->when($to = Arr::get($params, 'date_to'),
-                    fn (Builder $q) => $q->whereDate('transacted_at', '<=', $to)
-                )
-            )
+        return QueryBuilder::for(Income::where('user_id', $user->id))
+            ->allowedFilters([
+                AllowedFilter::scope('transacted_after'),
+                AllowedFilter::scope('transacted_before'),
+            ])
             ->with(['account', 'category'])
             ->get();
     }
