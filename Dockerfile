@@ -1,6 +1,6 @@
 FROM php:8.3-apache
 
-RUN apt install curl zip unzip libzip-dev -y
+RUN apt -y update install curl zip unzip libzip-dev -y
 
 RUN docker-php-ext-install pdo_mysql exif zip bcmath
 
