@@ -28,10 +28,10 @@ class ExpenseObserver
             $this->changeSign($expense);
         }
 
-        $orginalAmount = $expense->getOriginal('amount');
+        $originalAmount = $expense->getOriginal('amount');
         $modifiedAmount = $expense->getAttribute('amount');
 
-        $diff = $orginalAmount - $modifiedAmount;
+        $diff = $originalAmount - $modifiedAmount;
 
         $this->accountService->increment($expense->account, $diff);
     }
