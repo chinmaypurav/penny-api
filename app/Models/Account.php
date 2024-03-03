@@ -32,12 +32,12 @@ class Account extends Model
         return $this->hasMany(Expense::class);
     }
 
-    public function creditTranfers(): HasMany
+    public function creditTransfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'creditor_id');
     }
 
-    public function debitTranfers(): HasMany
+    public function debitTransfers(): HasMany
     {
         return $this->hasMany(Transfer::class, 'debitor_id');
     }
