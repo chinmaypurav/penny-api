@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use App\Concerns\Transactable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Transfer extends Model
 {
-    use HasFactory;
+    use HasFactory, Transactable;
 
     protected $fillable = [
         'creditor_id', 'debtor_id', 'amount', 'transacted_at', 'scheduled_at', 'completed', 'description', 'transaction_id',
