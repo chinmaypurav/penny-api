@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 
 class IncomeService
 {
-    public function index(User $user, array $params): Collection
+    public function index(User $user, array $params = []): Collection
     {
         return $user->incomes()
             ->when($params,
