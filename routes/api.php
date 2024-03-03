@@ -4,6 +4,7 @@ use App\Http\Controllers\AccountController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ExpenseController;
 use App\Http\Controllers\IncomeController;
+use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TransferController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -31,4 +32,5 @@ Route::group([
     Route::apiResource('incomes', IncomeController::class);
     Route::apiResource('expenses', ExpenseController::class);
     Route::apiResource('transfers', TransferController::class);
+    Route::get('transactions', TransactionController::class);
 });
