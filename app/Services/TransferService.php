@@ -2,7 +2,6 @@
 
 namespace App\Services;
 
-use App\Models\Expense;
 use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,7 +13,7 @@ class TransferService
 {
     public function index(User $user): Collection
     {
-        return QueryBuilder::for(Expense::where('user_id', $user->id))
+        return QueryBuilder::for(Transfer::where('user_id', $user->id))
             ->allowedFilters([
                 AllowedFilter::scope('transacted_after'),
                 AllowedFilter::scope('transacted_before'),
