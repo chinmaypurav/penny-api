@@ -1,4 +1,4 @@
-FROM php:8.3.3-apache
+FROM php:8.3-apache
 
 
 RUN mkdir -p /var/www/html
@@ -7,7 +7,7 @@ RUN mkdir -p /var/www/html
 
 RUN apt update -y
 
-RUN apt install curl zip unzip libzip-dev libpq-dev -y
+RUN apt install curl zip unzip libzip-dev -y
 
 RUN docker-php-ext-install pdo_mysql exif zip bcmath
 
