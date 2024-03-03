@@ -14,7 +14,6 @@ class TrustHosts extends Middleware
     public function hosts(): array
     {
         return [
-            'penny-nuxt.vercel.app',
             $this->allSubdomainsOfApplicationUrl(),
         ];
     }
