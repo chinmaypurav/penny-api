@@ -39,6 +39,6 @@ class Account extends Model
 
     public function debitTransfers(): HasMany
     {
-        return $this->hasMany(Transfer::class, 'debitor_id');
+        return $this->hasMany(Transfer::class, 'debtor_id');
     }
 }
