@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Enums\AccountType;
 use App\Models\Expense;
 use App\Services\AccountService;
 
@@ -34,14 +33,5 @@ class ExpenseObserver
     public function deleted(Expense $expense): void
     {
         $this->accountService->increment($expense->account, $expense->amount);
-    }
-
-    private function changeSign(Expense $expense): void
-    {
-        $accountType = $expense->account()->value('account_type');
-
-        if ($accountType === AccountType::CREDIT->value) {
-            $expense->amount *= -1;
-        }
     }
 }
