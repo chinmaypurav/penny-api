@@ -14,7 +14,6 @@ class IncomeObserver
 
     public function creating(Income $income): void
     {
-        $this->changeSign($income);
     }
 
     public function created(Income $income): void
@@ -24,10 +23,6 @@ class IncomeObserver
 
     public function updating(Income $income): void
     {
-        if ($income->isDirty('account_type')) {
-            $this->changeSign($income);
-        }
-
         $originalAmount = $income->getOriginal('amount');
         $modifiedAmount = $income->getAttribute('amount');
 

@@ -14,7 +14,6 @@ class ExpenseObserver
 
     public function creating(Expense $expense): void
     {
-        $this->changeSign($expense);
     }
 
     public function created(Expense $expense): void
@@ -24,10 +23,6 @@ class ExpenseObserver
 
     public function updating(Expense $expense): void
     {
-        if ($expense->isDirty('account_type')) {
-            $this->changeSign($expense);
-        }
-
         $originalAmount = $expense->getOriginal('amount');
         $modifiedAmount = $expense->getAttribute('amount');
 
