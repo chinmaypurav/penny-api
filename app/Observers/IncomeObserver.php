@@ -2,7 +2,6 @@
 
 namespace App\Observers;
 
-use App\Enums\AccountType;
 use App\Models\Income;
 use App\Services\AccountService;
 
@@ -14,7 +13,6 @@ class IncomeObserver
 
     public function creating(Income $income): void
     {
-        $this->changeSign($income);
     }
 
     public function created(Income $income): void
@@ -24,10 +22,6 @@ class IncomeObserver
 
     public function updating(Income $income): void
     {
-        if ($income->isDirty('account_type')) {
-            $this->changeSign($income);
-        }
-
         $originalAmount = $income->getOriginal('amount');
         $modifiedAmount = $income->getAttribute('amount');
 
@@ -39,14 +33,5 @@ class IncomeObserver
     public function deleted(Income $income): void
     {
         $this->accountService->decrement($income->account, $income->amount);
-    }
-
-    private function changeSign(Income $income): void
-    {
-        $accountType = $income->account()->value('account_type');
-
-        if ($accountType === AccountType::CREDIT->value) {
-            $income->amount *= -1;
-        }
     }
 }

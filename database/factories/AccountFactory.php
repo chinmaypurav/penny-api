@@ -17,7 +17,7 @@ class AccountFactory extends Factory
             'user_id' => User::factory(),
             'name' => fake()->word(),
             'account_type' => fake()->randomElement(AccountType::all()),
-            'balance' => fake()->numberBetween(0, 10000),
+            'balance' => fake()->randomFloat(2, -10000, 10000),
         ];
     }
 }

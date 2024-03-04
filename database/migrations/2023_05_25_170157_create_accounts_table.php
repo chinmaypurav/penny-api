@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AccountType;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained();
             $table->string('name');
-            $table->enum('account_type', AccountType::all())->default(AccountType::SAVINGS->value);
-            $table->decimal('balance', 16)->default(0);
+            $table->string('account_type');
+            $table->unsignedDecimal('balance', 16)->default(0);
             $table->timestamps();
         });
     }
