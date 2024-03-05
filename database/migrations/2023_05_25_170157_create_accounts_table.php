@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->string('name');
             $table->string('account_type');
-            $table->unsignedDecimal('balance', 16)->default(0);
+            $table->decimal('balance', 16)->default(0);
             $table->timestamps();
         });
     }
