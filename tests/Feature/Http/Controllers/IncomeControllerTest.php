@@ -104,8 +104,8 @@ it('fetches all income for that user', function () {
                     'category_id',
                     'amount',
                     'transacted_at',
-                ]
-            ]
+                ],
+            ],
         ])->assertJsonCount(2, 'incomes');
 });
 
