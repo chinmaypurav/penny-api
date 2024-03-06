@@ -86,6 +86,29 @@ it('fetches single income by id', function () {
         ]);
 });
 
+it('fetches all income for that user', function () {
+
+    $income = Income::factory()->count(2)->create([
+        'user_id' => $this->user,
+    ]);
+
+    actingAs($this->user)
+        ->getJson('api/incomes')
+        ->assertOk()
+        ->assertJsonStructure([
+            'incomes' => [
+                [
+                    'id',
+                    'description',
+                    'account_id',
+                    'category_id',
+                    'amount',
+                    'transacted_at',
+                ]
+            ]
+        ])->assertJsonCount(2, 'incomes');
+});
+
 it('deletes income from incomes table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
         'user_id' => $this->user,
