@@ -36,11 +36,4 @@ class Expense extends Model
     {
         return $this->belongsTo(Category::class);
     }
-
-    protected function amount(): Attribute
-    {
-        return Attribute::make(
-            get: fn (float $amount) => -1 * $amount
-        );
-    }
 }
