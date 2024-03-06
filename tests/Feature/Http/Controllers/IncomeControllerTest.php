@@ -6,8 +6,11 @@ use App\Models\Category;
 use App\Models\Income;
 use App\Models\User;
 use App\Services\IncomeService;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 
-uses(\Illuminate\Foundation\Testing\DatabaseMigrations::class);
+use function Pest\Laravel\actingAs;
+
+uses(DatabaseMigrations::class);
 
 beforeEach(function () {
     $this->service = app(IncomeService::class);
@@ -41,7 +44,7 @@ it('stores income to incomes table and adjusts account', function (AccountType $
         'amount' => fake()->randomFloat(2),
     ];
 
-    $this->actingAs($this->user)
+    actingAs($this->user)
         ->postJson('api/incomes', $payload)
         ->assertCreated();
 
@@ -77,7 +80,7 @@ it('deletes income from incomes table and adjusts account', function (AccountTyp
         'category_id' => $category,
     ]);
 
-    $this->actingAs($this->user)
+    actingAs($this->user)
         ->deleteJson('api/incomes/'.$income->id, $payload)
         ->assertNoContent();
 
