@@ -17,7 +17,7 @@ class IncomeObserver
 
     public function created(Income $income): void
     {
-        $this->accountService->increment($income->account, $income->amount);
+        $this->accountService->increment($income->account()->first(), $income->amount);
     }
 
     public function updating(Income $income): void

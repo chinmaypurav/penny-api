@@ -7,6 +7,7 @@ use App\Models\Income;
 use App\Models\User;
 use App\Services\IncomeService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Support\Carbon;
 
 use function Pest\Laravel\actingAs;
 
@@ -41,12 +42,20 @@ it('stores income to incomes table and adjusts account', function (AccountType $
         'category_id' => $category->id,
         'description' => fake()->word(),
         'transacted_at' => now()->toDateTimeString(),
-        'amount' => fake()->randomFloat(2),
+        'amount' => (string) fake()->randomFloat(2),
     ];
 
     actingAs($this->user)
         ->postJson('api/incomes', $payload)
-        ->assertCreated();
+        ->assertCreated()
+        ->assertSimilarJson([
+            'id' => 1,
+            'description' => $payload['description'],
+            'account_id' => $payload['account_id'],
+            'category_id' => $payload['category_id'],
+            'amount' => $payload['amount'],
+            'transacted_at' => Carbon::parse($payload['transacted_at']),
+        ]);
 
     $expected = $payload;
     $expected['user_id'] = $this->user->id;
@@ -57,6 +66,48 @@ it('stores income to incomes table and adjusts account', function (AccountType $
         'balance' => $account->balance + $payload['amount'],
     ]);
 })->with('getIncomeDataset');
+
+it('fetches single income by id', function () {
+
+    $income = Income::factory()->create([
+        'user_id' => $this->user,
+    ])->refresh();
+
+    actingAs($this->user)
+        ->getJson('api/incomes/'.$income->id)
+        ->assertOk()
+        ->assertSimilarJson([
+            'id' => $income->id,
+            'description' => $income->description,
+            'account_id' => $income->account_id,
+            'category_id' => $income->category_id,
+            'amount' => $income->amount,
+            'transacted_at' => $income->transacted_at,
+        ]);
+});
+
+it('fetches all income for that user', function () {
+
+    $income = Income::factory()->count(2)->create([
+        'user_id' => $this->user,
+    ]);
+
+    actingAs($this->user)
+        ->getJson('api/incomes')
+        ->assertOk()
+        ->assertJsonStructure([
+            'incomes' => [
+                [
+                    'id',
+                    'description',
+                    'account_id',
+                    'category_id',
+                    'amount',
+                    'transacted_at',
+                ],
+            ],
+        ])->assertJsonCount(2, 'incomes');
+});
 
 it('deletes income from incomes table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
