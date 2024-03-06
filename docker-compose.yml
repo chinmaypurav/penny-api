@@ -9,7 +9,7 @@ services:
         volumes:
             - .:/var/www/html
         networks:
-            - penny
+            penny:
         depends_on:
             - mysql
     mysql:
