@@ -1,114 +1,92 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers;
-
 use App\Enums\AccountType;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Expense;
 use App\Models\User;
 use App\Services\ExpenseService;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
-use Tests\TestCase;
 
-class ExpenseControllerTest extends TestCase
-{
-    use DatabaseMigrations;
+uses(\Illuminate\Foundation\Testing\DatabaseMigrations::class);
 
-    private ExpenseService $service;
+beforeEach(function () {
+    $this->service = app(ExpenseService::class);
+    $this->user = User::factory()->create();
+});
 
-    private User $user;
+dataset('getExpenseDataset', function () {
+    return [
+        [AccountType::SAVINGS],
+        [AccountType::CREDIT],
+        [AccountType::TRADING],
+        [AccountType::CURRENT],
+    ];
+});
 
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $this->service = app(ExpenseService::class);
-        $this->user = User::factory()->create();
-    }
+test('expense service store method', function (AccountType $accountType) {
+    $account = Account::factory()->create([
+        'user_id' => $this->user,
+        'account_type' => $accountType,
+        'balance' => 10000,
+    ]);
 
-    public static function getExpenseDataset(): array
-    {
-        return [
-            [AccountType::SAVINGS],
-            [AccountType::CREDIT],
-            [AccountType::TRADING],
-            [AccountType::CURRENT],
-        ];
-    }
+    $category = Category::factory()->create([
+        'user_id' => $this->user,
+    ]);
 
-    /**
-     * @dataProvider getExpenseDataset
-     */
-    public function test_expense_service_store_method(AccountType $accountType)
-    {
-        $account = Account::factory()->create([
-            'user_id' => $this->user,
-            'account_type' => $accountType,
-            'balance' => 10000,
-        ]);
+    $payload = [
+        'account_id' => $account->id,
+        'category_id' => $category->id,
+        'description' => fake()->word(),
+        'transacted_at' => now()->toDateTimeString(),
+        'amount' => 5000,
+    ];
 
-        $category = Category::factory()->create([
-            'user_id' => $this->user,
-        ]);
+    $this->actingAs($this->user)
+        ->postJson('api/expenses', $payload)
+        ->assertCreated();
 
-        $payload = [
-            'account_id' => $account->id,
-            'category_id' => $category->id,
-            'description' => fake()->word(),
-            'transacted_at' => now()->toDateTimeString(),
-            'amount' => 5000,
-        ];
+    $expected = $payload;
+    $expected['user_id'] = $this->user->id;
 
-        $this->actingAs($this->user)
-            ->postJson('api/expenses', $payload)
-            ->assertCreated();
+    $this->assertDatabaseHas(Expense::class, $expected);
+    $this->assertDatabaseHas(Account::class, [
+        'id' => $account->id,
+        'balance' => $account->balance - $payload['amount'],
+    ]);
+})->with('getExpenseDataset');
 
-        $expected = $payload;
-        $expected['user_id'] = $this->user->id;
+test('expense service delete method', function (AccountType $accountType) {
+    $account = Account::factory()->create([
+        'user_id' => $this->user,
+        'account_type' => $accountType,
+    ]);
 
-        $this->assertDatabaseHas(Expense::class, $expected);
-        $this->assertDatabaseHas(Account::class, [
-            'id' => $account->id,
-            'balance' => $account->balance - $payload['amount'],
-        ]);
-    }
+    $category = Category::factory()->create([
+        'user_id' => $this->user,
+    ]);
 
-    /**
-     * @dataProvider getExpenseDataset
-     */
-    public function test_expense_service_delete_method(AccountType $accountType)
-    {
-        $account = Account::factory()->create([
-            'user_id' => $this->user,
-            'account_type' => $accountType,
-        ]);
+    $payload = [
+        'description' => fake()->word(),
+        'transacted_at' => now()->toDateTimeString(),
+        'amount' => 10000,
+    ];
 
-        $category = Category::factory()->create([
-            'user_id' => $this->user,
-        ]);
+    $expense = Expense::factory()->createQuietly([
+        'user_id' => $this->user,
+        'account_id' => $account,
+        'category_id' => $category,
+    ]);
 
-        $payload = [
-            'description' => fake()->word(),
-            'transacted_at' => now()->toDateTimeString(),
-            'amount' => 10000,
-        ];
+    $this->actingAs($this->user)
+        ->deleteJson('api/expenses/'.$expense->id, $payload)
+        ->assertNoContent();
 
-        $expense = Expense::factory()->createQuietly([
-            'user_id' => $this->user,
-            'account_id' => $account,
-            'category_id' => $category,
-        ]);
-
-        $this->actingAs($this->user)
-            ->deleteJson('api/expenses/'.$expense->id, $payload)
-            ->assertNoContent();
-
-        $this->assertDatabaseMissing(Expense::class, [
-            'id' => $expense->id,
-        ]);
-        $this->assertDatabaseHas(Account::class, [
-            'id' => $account->id,
-            'balance' => $account->balance + $expense->amount,
-        ]);
-    }
-}
+    $this->assertDatabaseMissing(Expense::class, [
+        'id' => $expense->id,
+    ]);
+    $this->assertDatabaseHas(Account::class, [
+        'id' => $account->id,
+        'balance' => $account->balance + $expense->amount,
+    ]);
+})->with('getExpenseDataset');
