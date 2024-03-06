@@ -23,7 +23,7 @@ dataset('getIncomeDataset', function () {
     ];
 });
 
-test('income service store method', function (AccountType $accountType) {
+it('stores income to incomes table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
         'user_id' => $this->user,
         'account_type' => $accountType,
@@ -55,7 +55,7 @@ test('income service store method', function (AccountType $accountType) {
     ]);
 })->with('getIncomeDataset');
 
-test('income service delete method', function (AccountType $accountType) {
+it('deletes income from incomes table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
         'user_id' => $this->user,
         'account_type' => $accountType,

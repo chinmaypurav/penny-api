@@ -23,7 +23,7 @@ dataset('getExpenseDataset', function () {
     ];
 });
 
-test('expense service store method', function (AccountType $accountType) {
+it('stores expense to expenses table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
         'user_id' => $this->user,
         'account_type' => $accountType,
@@ -56,7 +56,7 @@ test('expense service store method', function (AccountType $accountType) {
     ]);
 })->with('getExpenseDataset');
 
-test('expense service delete method', function (AccountType $accountType) {
+test('deletes expense from expenses table and adjusts account', function (AccountType $accountType) {
     $account = Account::factory()->create([
         'user_id' => $this->user,
         'account_type' => $accountType,
