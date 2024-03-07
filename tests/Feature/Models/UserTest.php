@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Account;
+use App\Models\Category;
 use App\Models\Expense;
 use App\Models\Income;
 use App\Models\Transfer;
@@ -17,6 +18,16 @@ it('has accounts', function () {
     expect($user->accounts)
         ->toHaveCount(2)
         ->each->toBeInstanceOf(Account::class);
+});
+
+it('has categories', function () {
+    $user = User::factory()
+        ->has(Category::factory()->count(2))
+        ->create();
+
+    expect($user->categories)
+        ->toHaveCount(2)
+        ->each->toBeInstanceOf(Category::class);
 });
 
 it('has incomes', function () {
