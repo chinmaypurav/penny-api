@@ -11,9 +11,9 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 uses(RefreshDatabase::class);
 
 it('belongs to a user', function () {
-    $account = Category::factory()->has(User::factory())->create();
+    $category = Category::factory()->has(User::factory())->create();
 
-    expect($account->user)->toBeInstanceOf(User::class);
+    expect($category->user)->toBeInstanceOf(User::class);
 });
 
 
