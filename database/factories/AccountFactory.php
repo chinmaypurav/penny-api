@@ -13,7 +13,7 @@ class AccountFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => fake()->word(),
-            'account_type' => fake()->randomElement(AccountType::all()),
+            'account_type' => fake()->randomElement(AccountType::cases()),
             'balance' => fake()->randomNumber(),
         ];
     }

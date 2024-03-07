@@ -13,7 +13,7 @@ class CategoryFactory extends Factory
         return [
             'user_id' => User::factory(),
             'name' => fake()->word(),
-            'category_type' => fake()->randomElement(CategoryType::all()),
+            'category_type' => fake()->randomElement(CategoryType::cases()),
         ];
     }
 }
