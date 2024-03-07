@@ -2,9 +2,7 @@
 
 use App\Models\Account;
 use App\Models\Category;
-use App\Models\Expense;
 use App\Models\Income;
-use App\Models\Transfer;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
@@ -27,6 +25,3 @@ it('belongs to a category', function () {
 
     expect($income->category)->toBeInstanceOf(Category::class);
 });
-
-
-
