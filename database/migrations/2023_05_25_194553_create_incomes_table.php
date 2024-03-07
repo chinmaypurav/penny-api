@@ -20,7 +20,7 @@ return new class extends Migration
             $table->dateTime('transacted_at')->nullable();
             $table->boolean('completed')->default(false);
             $table->string('description');
-            $table->decimal('amount', 16)->default(0);
+            $table->bigInteger('amount')->default(0);
             $table->timestamps();
         });
     }

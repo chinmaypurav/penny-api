@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained();
             $table->foreignId('creditor_id')->constrained('accounts');
             $table->foreignId('debtor_id')->constrained('accounts');
-            $table->decimal('amount', 16);
+            $table->bigInteger('amount');
             $table->dateTime('scheduled_at')->nullable();
             $table->dateTime('transacted_at')->nullable();
             $table->boolean('completed')->default(false);
