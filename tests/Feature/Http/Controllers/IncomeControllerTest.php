@@ -42,7 +42,7 @@ it('stores income to incomes table and adjusts account', function (AccountType $
         'category_id' => $category->id,
         'description' => fake()->word(),
         'transacted_at' => now()->toDateTimeString(),
-        'amount' => (string) fake()->randomFloat(2),
+        'amount' => (string) fake()->randomNumber(),
     ];
 
     actingAs($this->user)

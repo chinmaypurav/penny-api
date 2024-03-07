@@ -19,7 +19,6 @@ class Income extends Model
         'transacted_at' => 'datetime',
         'scheduled_at' => 'datetime',
         'completed' => 'true',
-        'amount' => 'decimal:2',
     ];
 
     public function user(): BelongsTo

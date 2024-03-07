@@ -25,7 +25,7 @@ class ExpenseFactory extends Factory
             'category_id' => Category::factory(),
             'transacted_at' => fake()->date(),
             'description' => fake()->word(),
-            'amount' => fake()->randomFloat(2),
+            'amount' => fake()->randomNumber(),
         ];
     }
 }
