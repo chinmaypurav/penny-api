@@ -18,7 +18,7 @@ class Income extends Model
     protected $casts = [
         'transacted_at' => 'datetime',
         'scheduled_at' => 'datetime',
-        'completed' => 'true',
+        'completed' => 'boolean',
     ];
 
     public function user(): BelongsTo
