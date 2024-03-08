@@ -42,7 +42,38 @@ it('allows user to create an account', function () {
     ]);
 });
 
-it('allows user get its account by id', function () {
+it('allows user update an account', function () {
+    $user = User::factory()
+        ->has(
+            Account::factory()
+                ->state(fn (array $attributes, User $user) => ['name' => 'old account'])->count(1)
+        )
+        ->create();
+
+    $account = $user->accounts()->first();
+
+    $updatedAccount = [
+        'name' => 'new account',
+    ];
+
+    actingAs($user)
+        ->patchJson('api/accounts/'.$account->id, $updatedAccount)
+        ->assertOk()
+        ->assertSimilarJson([
+            'id' => 1,
+            'name' => $updatedAccount['name'],
+            'account_type' => $account->account_type,
+            'balance' => $account->balance,
+            'created_at' => now()->toIso8601ZuluString(),
+        ]);
+
+    $this->assertDatabaseHas(Account::class, [
+        'id' => $account->id,
+        'name' => $updatedAccount['name'],
+    ]);
+});
+
+it('allows user retrieve an account', function () {
     $user = User::factory()
         ->has(Account::factory()->count(2))
         ->create();
@@ -61,7 +92,7 @@ it('allows user get its account by id', function () {
         ]);
 });
 
-it('allows user to get all accounts', function () {
+it('allows user to retrieve all accounts', function () {
 
     $user = User::factory()
         ->has(Account::factory()->count(2))
@@ -82,7 +113,7 @@ it('allows user to get all accounts', function () {
         ])->assertJsonCount(2, 'accounts');
 });
 
-it('allows user delete account', function () {
+it('allows user to delete an account', function () {
     $user = User::factory()
         ->has(Account::factory())
         ->create();
