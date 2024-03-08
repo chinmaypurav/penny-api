@@ -14,7 +14,7 @@ beforeEach(function () {
     Carbon::setTestNow(now());
 });
 
-it('allows authenticated user to create an account', function () {
+it('allows user to create an account', function () {
 
     $user = User::factory()->create();
 
@@ -42,7 +42,7 @@ it('allows authenticated user to create an account', function () {
     ]);
 });
 
-it('allows authenticated user get its account by id', function () {
+it('allows user get its account by id', function () {
     $user = User::factory()
         ->has(Account::factory()->count(2))
         ->create();
@@ -61,7 +61,7 @@ it('allows authenticated user get its account by id', function () {
         ]);
 });
 
-it('allows authenticated user to get all accounts', function () {
+it('allows user to get all accounts', function () {
 
     $user = User::factory()
         ->has(Account::factory()->count(2))
@@ -82,7 +82,7 @@ it('allows authenticated user to get all accounts', function () {
         ])->assertJsonCount(2, 'accounts');
 });
 
-it('allows authenticated user delete account', function () {
+it('allows user delete account', function () {
     $user = User::factory()
         ->has(Account::factory())
         ->create();
