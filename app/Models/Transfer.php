@@ -16,8 +16,8 @@ class Transfer extends Model
     ];
 
     protected $casts = [
-        'transacted_at' => 'datetime',
-        'scheduled_at' => 'datetime',
+        'transacted_at' => 'datetime:Y-m-d',
+        'scheduled_at' => 'datetime:Y-m-d',
         'completed' => 'boolean',
     ];
 
