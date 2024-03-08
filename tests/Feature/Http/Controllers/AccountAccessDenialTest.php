@@ -17,7 +17,7 @@ beforeEach(function () {
     $this->account = Account::factory()->create();
 });
 
-it('denies user retrieve other user account', function () {
+it('denies user to retrieve other user account', function () {
     $user = User::factory()->create();
 
     actingAs($user)
@@ -25,7 +25,7 @@ it('denies user retrieve other user account', function () {
         ->assertForbidden();
 });
 
-it('denies user access to update other user account', function () {
+it('denies user to update other user account', function () {
     $user = User::factory()->create();
 
     actingAs($user)
@@ -48,17 +48,17 @@ it('denies guest to retrieve any accounts', function () {
         ->assertUnauthorized();
 });
 
-it('denies guest to retrieve a account', function () {
+it('denies guest to retrieve an account', function () {
     getJson('api/accounts/'.$this->account->id)
         ->assertUnauthorized();
 });
 
-it('denies guest to update a account', function () {
+it('denies guest to update an account', function () {
     patchJson('api/accounts/'.$this->account->id)
         ->assertUnauthorized();
 });
 
-it('denies guest to delete a account', function () {
+it('denies guest to delete an account', function () {
     deleteJson('api/accounts/'.$this->account->id)
         ->assertUnauthorized();
 });
