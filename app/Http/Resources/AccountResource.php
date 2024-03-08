@@ -13,12 +13,10 @@ class AccountResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'value' => $this->id,
             'name' => $this->name,
-            'label' => $this->name,
             'account_type' => $this->account_type,
-            'balance' => number_format($this->balance, 2),
-            'created_at' => $this->created_at,
+            'balance' => $this->balance,
+            'created_at' => $this->created_at->toIso8601ZuluString(),
         ];
     }
 }
