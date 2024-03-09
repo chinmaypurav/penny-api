@@ -26,6 +26,8 @@ WORKDIR /var/www/html/
 
 COPY ./ /var/www/html
 
+RUN rm -rf tests/
+
 RUN chown -R www-data:www-data /var/www/html
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
