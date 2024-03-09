@@ -22,6 +22,5 @@ it('gets the authenticated user object', function () {
 
 it('denies access to user endpoint', function () {
     getJson('api/user')
-        ->assertOk()
         ->assertUnauthorized();
 });
