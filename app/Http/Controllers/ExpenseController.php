@@ -10,6 +10,7 @@ use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
 use App\Services\ExpenseService;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
@@ -26,7 +27,7 @@ class ExpenseController extends Controller
         });
     }
 
-    public function index(IndexExpenseRequest $request)
+    public function index(IndexExpenseRequest $request): JsonResource
     {
         return ExpenseCollection::make($this->expenseService->index(Auth::id()));
     }
