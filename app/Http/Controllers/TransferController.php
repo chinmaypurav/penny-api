@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexTransferRequest;
 use App\Http\Requests\StoreTransferRequest;
 use App\Http\Requests\UpdateTransferRequest;
 use App\Http\Resources\TransferCollection;
 use App\Http\Resources\TransferResource;
 use App\Models\Transfer;
-use App\Models\User;
 use App\Services\TransferService;
+use Illuminate\Support\Facades\Auth;
 
 class TransferController extends Controller
 {
-    protected User $user;
-
-    public function __construct(protected TransferService $transferService)
+    public function __construct(private readonly TransferService $transferService)
     {
         $this->authorizeResource(Transfer::class);
-        $this->middleware(function ($request, $next) {
-            $this->user = auth()->user();
-
-            return $next($request);
-        });
     }
 
-    public function index(IndexTransferRequest $request)
+    public function index()
     {
-        return TransferCollection::make($this->transferService->index($this->user, $request->input()));
+        return TransferCollection::make($this->transferService->index(Auth::id()));
     }
 
     public function store(StoreTransferRequest $request)
     {
-        return TransferResource::make($this->transferService->store($this->user, $request->validated()));
+        return TransferResource::make($this->transferService->store(Auth::user(), $request->validated()));
     }
 
     public function show(Transfer $transfer)
