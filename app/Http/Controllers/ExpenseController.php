@@ -7,23 +7,15 @@ use App\Http\Requests\UpdateExpenseRequest;
 use App\Http\Resources\ExpenseCollection;
 use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
-use App\Models\User;
 use App\Services\ExpenseService;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
-    protected User $user;
-
     public function __construct(private readonly ExpenseService $expenseService)
     {
         $this->authorizeResource(Expense::class);
-        $this->middleware(function ($request, $next) {
-            $this->user = auth()->user();
-
-            return $next($request);
-        });
     }
 
     public function index(): JsonResource
@@ -33,7 +25,7 @@ class ExpenseController extends Controller
 
     public function store(StoreExpenseRequest $request)
     {
-        return ExpenseResource::make($this->expenseService->store($this->user, $request->validated()));
+        return ExpenseResource::make($this->expenseService->store(Auth::user(), $request->validated()));
     }
 
     public function show(Expense $expense)
