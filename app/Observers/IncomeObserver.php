@@ -27,7 +27,7 @@ class IncomeObserver
 
         $diff = $originalAmount - $modifiedAmount;
 
-        $this->accountService->decrement($income->account, $diff);
+        $this->accountService->decrement($income->account()->first(), $diff);
     }
 
     public function deleted(Income $income): void
