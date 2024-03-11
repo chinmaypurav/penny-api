@@ -10,12 +10,13 @@ use App\Http\Resources\ExpenseResource;
 use App\Models\Expense;
 use App\Models\User;
 use App\Services\ExpenseService;
+use Illuminate\Support\Facades\Auth;
 
 class ExpenseController extends Controller
 {
     protected User $user;
 
-    public function __construct(protected ExpenseService $expenseService)
+    public function __construct(private readonly ExpenseService $expenseService)
     {
         $this->authorizeResource(Expense::class);
         $this->middleware(function ($request, $next) {
@@ -27,7 +28,7 @@ class ExpenseController extends Controller
 
     public function index(IndexExpenseRequest $request)
     {
-        return ExpenseCollection::make($this->expenseService->index($this->user, $request->input()));
+        return ExpenseCollection::make($this->expenseService->index(Auth::id()));
     }
 
     public function store(StoreExpenseRequest $request)
