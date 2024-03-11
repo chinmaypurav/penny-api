@@ -11,9 +11,9 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class ExpenseService
 {
-    public function index(User $user): Collection
+    public function index(int $userId): Collection
     {
-        return QueryBuilder::for(Expense::where('user_id', $user->id))
+        return QueryBuilder::for(Expense::where('user_id', $userId))
             ->allowedFilters([
                 AllowedFilter::scope('transacted_after'),
                 AllowedFilter::scope('transacted_before'),
