@@ -2,37 +2,29 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\IndexIncomeRequest;
 use App\Http\Requests\StoreIncomeRequest;
 use App\Http\Requests\UpdateIncomeRequest;
 use App\Http\Resources\IncomeCollection;
 use App\Http\Resources\IncomeResource;
 use App\Models\Income;
-use App\Models\User;
 use App\Services\IncomeService;
+use Illuminate\Support\Facades\Auth;
 
 class IncomeController extends Controller
 {
-    protected User $user;
-
     public function __construct(protected IncomeService $incomeService)
     {
         $this->authorizeResource(Income::class);
-        $this->middleware(function ($request, $next) {
-            $this->user = auth()->user();
-
-            return $next($request);
-        });
     }
 
-    public function index(IndexIncomeRequest $request)
+    public function index()
     {
-        return IncomeCollection::make($this->incomeService->index($this->user, $request->input()));
+        return IncomeCollection::make($this->incomeService->index(Auth::id()));
     }
 
     public function store(StoreIncomeRequest $request)
     {
-        return IncomeResource::make($this->incomeService->store($this->user, $request->validated()));
+        return IncomeResource::make($this->incomeService->store(Auth::user(), $request->validated()));
     }
 
     public function show(Income $income)
