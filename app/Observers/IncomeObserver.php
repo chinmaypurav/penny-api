@@ -32,6 +32,6 @@ class IncomeObserver
 
     public function deleted(Income $income): void
     {
-        $this->accountService->decrement($income->account, $income->amount);
+        $this->accountService->decrement($income->account()->first(), $income->amount);
     }
 }
