@@ -20,4 +20,11 @@ class ExpenseFactory extends Factory
             'amount' => fake()->randomNumber(),
         ];
     }
+
+    public function noCategory(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'category_id' => null,
+        ]);
+    }
 }
