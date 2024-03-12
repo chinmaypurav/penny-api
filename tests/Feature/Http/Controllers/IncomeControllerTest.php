@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AccountType;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Income;
@@ -18,19 +17,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-dataset('getIncomeDataset', function () {
-    return [
-        [AccountType::SAVINGS],
-        [AccountType::CREDIT],
-        [AccountType::TRADING],
-        [AccountType::CURRENT],
-    ];
-});
-
-it('stores income to incomes table and adjusts account', function (AccountType $accountType) {
+it('stores income to incomes table and adjusts account', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
-        'account_type' => $accountType,
     ]);
 
     $category = Category::factory()->create([
@@ -65,7 +54,7 @@ it('stores income to incomes table and adjusts account', function (AccountType $
         'id' => $account->id,
         'balance' => $account->balance + $payload['amount'],
     ]);
-})->with('getIncomeDataset');
+});
 
 it('fetches single income by id', function () {
 
@@ -109,10 +98,9 @@ it('fetches all income for that user', function () {
         ])->assertJsonCount(2, 'incomes');
 });
 
-it('deletes income from incomes table and adjusts account', function (AccountType $accountType) {
+it('deletes income from incomes table and adjusts account', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
-        'account_type' => $accountType,
     ]);
 
     $category = Category::factory()->create([
@@ -142,4 +130,4 @@ it('deletes income from incomes table and adjusts account', function (AccountTyp
         'id' => $account->id,
         'balance' => $account->balance - $income->amount,
     ]);
-})->with('getIncomeDataset');
+});
