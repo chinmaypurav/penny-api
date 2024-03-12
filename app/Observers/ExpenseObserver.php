@@ -17,7 +17,7 @@ class ExpenseObserver
 
     public function created(Expense $expense): void
     {
-        $this->accountService->decrement($expense->account, $expense->amount);
+        $this->accountService->decrement($expense->account()->first(), $expense->amount);
     }
 
     public function updating(Expense $expense): void
@@ -27,7 +27,7 @@ class ExpenseObserver
 
         $diff = $originalAmount - $modifiedAmount;
 
-        $this->accountService->increment($expense->account, $diff);
+        $this->accountService->increment($expense->account()->first(), $diff);
     }
 
     public function deleted(Expense $expense): void
