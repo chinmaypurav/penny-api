@@ -95,7 +95,6 @@ it('fetches all income for that user', function () {
             ],
         ])->assertJsonCount(2, 'incomes');
 });
-
 it('allows user update an income', function () {
 
     $account = Income::factory()->create([

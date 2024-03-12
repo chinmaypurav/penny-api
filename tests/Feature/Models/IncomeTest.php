@@ -25,3 +25,9 @@ it('belongs to a category', function () {
 
     expect($income->category)->toBeInstanceOf(Category::class);
 });
+
+it('returns default category for null category', function () {
+    $income = Income::factory()->noCategory()->create();
+
+    expect($income->category)->toBeInstanceOf(Category::class);
+});

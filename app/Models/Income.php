@@ -33,6 +33,9 @@ class Income extends Model
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)
+            ->withDefault([
+                'name' => 'Default Category',
+            ]);
     }
 }

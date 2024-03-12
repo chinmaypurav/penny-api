@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AccountType;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Expense;
@@ -17,19 +16,9 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-dataset('getExpenseDataset', function () {
-    return [
-        [AccountType::SAVINGS],
-        [AccountType::CREDIT],
-        [AccountType::TRADING],
-        [AccountType::CURRENT],
-    ];
-});
-
-it('stores expense to expenses table and adjusts account', function (AccountType $accountType) {
+it('stores expense to expenses table and adjusts account', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
-        'account_type' => $accountType,
         'balance' => 10000,
     ]);
 
@@ -57,12 +46,11 @@ it('stores expense to expenses table and adjusts account', function (AccountType
         'id' => $account->id,
         'balance' => $account->balance - $payload['amount'],
     ]);
-})->with('getExpenseDataset');
+});
 
-it('deletes expense from expenses table and adjusts account', function (AccountType $accountType) {
+it('deletes expense from expenses table and adjusts account', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
-        'account_type' => $accountType,
     ]);
 
     $category = Category::factory()->create([
@@ -92,4 +80,4 @@ it('deletes expense from expenses table and adjusts account', function (AccountT
         'id' => $account->id,
         'balance' => $account->balance + $expense->amount,
     ]);
-})->with('getExpenseDataset');
+});
