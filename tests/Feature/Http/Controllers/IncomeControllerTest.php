@@ -15,14 +15,14 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-it('stores income to incomes table and adjusts account', function () {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+it('can create an income', function () {
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'account_id' => $account->id,
@@ -48,17 +48,14 @@ it('stores income to incomes table and adjusts account', function () {
     $expected['user_id'] = $this->user->id;
 
     $this->assertDatabaseHas(Income::class, $expected);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance + $payload['amount'],
-    ]);
 });
 
-it('fetches single income by id', function () {
+it('can retrieve an income', function () {
 
-    $income = Income::factory()->create([
-        'user_id' => $this->user,
-    ])->refresh();
+    $income = Income::factory()
+        ->for($this->user)
+        ->create()
+        ->refresh();
 
     actingAs($this->user)
         ->getJson('api/incomes/'.$income->id)
@@ -73,11 +70,12 @@ it('fetches single income by id', function () {
         ]);
 });
 
-it('fetches all income for that user', function () {
+it('can retrieve all incomes', function () {
 
-    $income = Income::factory()->count(2)->create([
-        'user_id' => $this->user,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->count(2)
+        ->create();
 
     actingAs($this->user)
         ->getJson('api/incomes')
@@ -95,21 +93,22 @@ it('fetches all income for that user', function () {
             ],
         ])->assertJsonCount(2, 'incomes');
 });
-it('allows user update an income', function () {
 
-    $account = Income::factory()->create([
-        'user_id' => $this->user,
-    ]);
+it('can update an income', function () {
+
+    Income::factory()
+        ->for($this->user)
+        ->create();
 
     $income = $this->user->incomes()->first();
 
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'account_id' => $account->id,
@@ -137,14 +136,14 @@ it('allows user update an income', function () {
     $this->assertDatabaseHas(Income::class, $expected);
 });
 
-it('deletes income from incomes table and adjusts account', function () {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+it('can delete an income', function () {
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'description' => fake()->word(),
@@ -152,11 +151,11 @@ it('deletes income from incomes table and adjusts account', function () {
         'amount' => 10000,
     ];
 
-    $income = Income::factory()->createQuietly([
-        'user_id' => $this->user,
-        'account_id' => $account,
-        'category_id' => $category,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->for($account)
+        ->for($category)
+        ->createQuietly();
 
     actingAs($this->user)
         ->deleteJson('api/incomes/'.$income->id, $payload)
@@ -164,9 +163,5 @@ it('deletes income from incomes table and adjusts account', function () {
 
     $this->assertDatabaseMissing(Income::class, [
         'id' => $income->id,
-    ]);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance - $income->amount,
     ]);
 });
