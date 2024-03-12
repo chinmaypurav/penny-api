@@ -16,13 +16,13 @@ beforeEach(function () {
 });
 
 it('can create an income', function () {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'account_id' => $account->id,
@@ -52,9 +52,10 @@ it('can create an income', function () {
 
 it('can retrieve an income', function () {
 
-    $income = Income::factory()->create([
-        'user_id' => $this->user,
-    ])->refresh();
+    $income = Income::factory()
+        ->for($this->user)
+        ->create()
+        ->refresh();
 
     actingAs($this->user)
         ->getJson('api/incomes/'.$income->id)
@@ -71,9 +72,10 @@ it('can retrieve an income', function () {
 
 it('can retrieve all incomes', function () {
 
-    $income = Income::factory()->count(2)->create([
-        'user_id' => $this->user,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->count(2)
+        ->create();
 
     actingAs($this->user)
         ->getJson('api/incomes')
@@ -94,19 +96,19 @@ it('can retrieve all incomes', function () {
 
 it('can update an income', function () {
 
-    $account = Income::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    Income::factory()
+        ->for($this->user)
+        ->create();
 
     $income = $this->user->incomes()->first();
 
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'account_id' => $account->id,
@@ -135,13 +137,13 @@ it('can update an income', function () {
 });
 
 it('can delete an income', function () {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'description' => fake()->word(),
@@ -149,11 +151,11 @@ it('can delete an income', function () {
         'amount' => 10000,
     ];
 
-    $income = Income::factory()->createQuietly([
-        'user_id' => $this->user,
-        'account_id' => $account,
-        'category_id' => $category,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->for($account)
+        ->for($category)
+        ->createQuietly();
 
     actingAs($this->user)
         ->deleteJson('api/incomes/'.$income->id, $payload)
