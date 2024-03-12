@@ -55,7 +55,7 @@ it('returns no validation errors on income create for nullable fields', function
         ->assertCreated()
         ->assertJsonMissingValidationErrors($attribute);
 })->with([
-    ['income_id'],
+    ['category_id'],
 ]);
 
 it('returns validation errors on income update', function (string $attribute, array $data) {
@@ -77,5 +77,5 @@ it('returns no validation errors on income update for nullable fields', function
         ->assertOk()
         ->assertJsonMissingValidationErrors($attribute);
 })->with([
-    ['income_id'],
+    ['category_id'],
 ]);
