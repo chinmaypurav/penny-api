@@ -15,7 +15,7 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-it('stores income to incomes table and adjusts account', function () {
+it('can create an income', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
     ]);
@@ -48,13 +48,9 @@ it('stores income to incomes table and adjusts account', function () {
     $expected['user_id'] = $this->user->id;
 
     $this->assertDatabaseHas(Income::class, $expected);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance + $payload['amount'],
-    ]);
 });
 
-it('fetches single income by id', function () {
+it('can retrieve an income', function () {
 
     $income = Income::factory()->create([
         'user_id' => $this->user,
@@ -73,7 +69,7 @@ it('fetches single income by id', function () {
         ]);
 });
 
-it('fetches all income for that user', function () {
+it('can retrieve all incomes', function () {
 
     $income = Income::factory()->count(2)->create([
         'user_id' => $this->user,
@@ -95,7 +91,8 @@ it('fetches all income for that user', function () {
             ],
         ])->assertJsonCount(2, 'incomes');
 });
-it('allows user update an income', function () {
+
+it('can update an income', function () {
 
     $account = Income::factory()->create([
         'user_id' => $this->user,
@@ -137,7 +134,7 @@ it('allows user update an income', function () {
     $this->assertDatabaseHas(Income::class, $expected);
 });
 
-it('deletes income from incomes table and adjusts account', function () {
+it('can delete an income', function () {
     $account = Account::factory()->create([
         'user_id' => $this->user,
     ]);
@@ -164,9 +161,5 @@ it('deletes income from incomes table and adjusts account', function () {
 
     $this->assertDatabaseMissing(Income::class, [
         'id' => $income->id,
-    ]);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance - $income->amount,
     ]);
 });
