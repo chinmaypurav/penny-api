@@ -4,7 +4,6 @@ use App\Models\Account;
 use App\Models\Category;
 use App\Models\Income;
 use App\Models\User;
-use App\Services\IncomeService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Carbon;
 
@@ -13,7 +12,6 @@ use function Pest\Laravel\actingAs;
 uses(DatabaseMigrations::class);
 
 beforeEach(function () {
-    $this->service = app(IncomeService::class);
     $this->user = User::factory()->create();
 });
 
@@ -96,6 +94,47 @@ it('fetches all income for that user', function () {
                 ],
             ],
         ])->assertJsonCount(2, 'incomes');
+});
+it('allows user update an income', function () {
+
+    $account = Income::factory()->create([
+        'user_id' => $this->user,
+    ]);
+
+    $income = $this->user->incomes()->first();
+
+    $account = Account::factory()->create([
+        'user_id' => $this->user,
+    ]);
+
+    $category = Category::factory()->create([
+        'user_id' => $this->user,
+    ]);
+
+    $payload = [
+        'account_id' => $account->id,
+        'category_id' => $category->id,
+        'description' => fake()->word(),
+        'transacted_at' => now()->toDateTimeString(),
+        'amount' => fake()->randomNumber(),
+    ];
+
+    actingAs($this->user)
+        ->patchJson('api/incomes/'.$income->id, $payload)
+        ->assertOk()
+        ->assertSimilarJson([
+            'id' => $income->id,
+            'description' => $payload['description'],
+            'account_id' => $payload['account_id'],
+            'category_id' => $payload['category_id'],
+            'amount' => $payload['amount'],
+            'transacted_at' => Carbon::parse($payload['transacted_at']),
+        ]);
+
+    $expected = $payload;
+    $expected['user_id'] = $this->user->id;
+
+    $this->assertDatabaseHas(Income::class, $expected);
 });
 
 it('deletes income from incomes table and adjusts account', function () {
