@@ -1,6 +1,5 @@
 <?php
 
-use App\Enums\AccountType;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Expense;
