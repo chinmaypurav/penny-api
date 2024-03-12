@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\Account;
-use App\Models\Category;
 use App\Models\Income;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
@@ -22,12 +21,10 @@ it('adds account balance when created', function () {
     $account = Account::factory()->create([
         'balance' => 1000,
     ]);
-    $category = Category::factory()->create();
 
     $payload = [
         'description' => fake()->sentence(),
         'account_id' => $account->id,
-        'category_id' => $category->id,
         'transacted_at' => now()->toDateTimeString(),
         'amount' => 3000,
     ];
