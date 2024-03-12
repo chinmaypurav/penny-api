@@ -37,18 +37,20 @@ dataset('getInvalidData', function () {
     ];
 });
 
-it('returns no validation errors on expense store with no data', function () {
-
+it('returns all validation errors on expense store with no data', function () {
     actingAs($this->user)
-        ->patchJson('api/expenses/'.$this->expense->id, [])
-        ->assertOk()
-        ->assertJsonMissingValidationErrors();
+        ->postJson('api/expenses')
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'account_id', 'transacted_at', 'description', 'amount',
+        ])
+        ->assertJsonMissingValidationErrors(['category_id']);
 });
 
 it('returns no validation errors on expense update with no data', function () {
 
     actingAs($this->user)
-        ->patchJson('api/expenses/'.$this->expense->id, [])
+        ->patchJson('api/expenses/'.$this->expense->id)
         ->assertOk()
         ->assertJsonMissingValidationErrors();
 });

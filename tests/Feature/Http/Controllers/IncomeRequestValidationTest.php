@@ -37,6 +37,24 @@ dataset('getInvalidData', function () {
     ];
 });
 
+it('returns all validation errors on income store with no data', function () {
+    actingAs($this->user)
+        ->postJson('api/incomes')
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'account_id', 'transacted_at', 'description', 'amount',
+        ])
+        ->assertJsonMissingValidationErrors(['category_id']);
+});
+
+it('returns no validation errors on income update with no data', function () {
+
+    actingAs($this->user)
+        ->patchJson('api/incomes/'.$this->income->id)
+        ->assertOk()
+        ->assertJsonMissingValidationErrors();
+});
+
 it('returns validation errors on income create', function (string $attribute, array $data) {
 
     actingAs($this->user)
