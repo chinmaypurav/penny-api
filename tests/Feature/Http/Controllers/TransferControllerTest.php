@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Sequence;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Carbon;
+use Illuminate\Testing\Fluent\AssertableJson;
 
 use function Pest\Laravel\actingAs;
 
@@ -39,12 +40,14 @@ it('allows user to create a transfer', function () {
     actingAs($user)
         ->postJson('api/transfers', $payload)
         ->assertCreated()
-        ->assertJsonFragment([
-            'id' => 1,
-            'description' => $payload['description'],
-            'amount' => $payload['amount'],
-            'transacted_at' => $payload['transacted_at'],
-        ]);
+        ->assertJson(fn (AssertableJson $json) => $json->where('id', 1)
+            ->where('description', $payload['description'])
+            ->where('amount', $payload['amount'])
+            ->where('transacted_at', $payload['transacted_at'])
+            ->where('creditor.id', $creditor->id)
+            ->where('debtor.id', $debtor->id)
+            ->etc()
+        );
 
     $this->assertDatabaseHas(Transfer::class, [
         'id' => 1,
@@ -57,7 +60,55 @@ it('allows user to create a transfer', function () {
 });
 
 it('allows user update a transfer', function () {
-    // TODO
+    $user = User::factory()
+        ->has(
+            Account::factory()->state(new Sequence(
+                ['name' => 'account 1', 'balance' => 10000],
+                ['name' => 'account 2', 'balance' => 20000],
+            ))->count(2)
+        )
+        ->create();
+
+    $account1 = Account::where('name', 'account 1')->first();
+    $account2 = Account::where('name', 'account 2')->first();
+
+    $transfer = Transfer::factory()
+        ->create([
+            'debtor_id' => $account1->id,
+            'creditor_id' => $account2->id,
+            'description' => 'transfer 1',
+        ]);
+
+    $account1 = Transfer::where('description', 'transfer 1')->first();
+
+    $payload = [
+        'creditor_id' => $account2->id,
+        'debtor_id' => $account1->id,
+        'amount' => 2000,
+        'transacted_at' => Carbon::yesterday()->toIso8601ZuluString(),
+        'description' => fake()->sentence(),
+    ];
+
+    actingAs($user)
+        ->patchJson('api/transfers/'.$transfer->id, $payload)
+        ->assertOk()
+        ->assertJson(fn (AssertableJson $json) => $json->where('id', 1)
+            ->where('description', $payload['description'])
+            ->where('amount', $payload['amount'])
+            ->where('transacted_at', $payload['transacted_at'])
+            ->where('creditor.id', $account2->id)
+            ->where('debtor.id', $account1->id)
+            ->etc()
+        );
+
+    $this->assertDatabaseHas(Transfer::class, [
+        'id' => $transfer->id,
+        'description' => $payload['description'],
+        'creditor_id' => $payload['creditor_id'],
+        'debtor_id' => $payload['debtor_id'],
+        'amount' => $payload['amount'],
+        'transacted_at' => $payload['transacted_at'],
+    ]);
 });
 
 it('allows user retrieve a transfer', function () {
