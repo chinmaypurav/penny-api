@@ -18,10 +18,10 @@ class TransferObserver
             return;
         }
 
-        $orginalAmount = $transfer->getOriginal('amount');
+        $originalAmount = $transfer->getOriginal('amount');
         $modifiedAmount = $transfer->getAttribute('amount');
 
-        $diff = $orginalAmount - $modifiedAmount;
+        $diff = $originalAmount - $modifiedAmount;
 
         $transfer->debtorAccount()->increment('balance', $diff);
         $transfer->creditorAccount()->decrement('balance', $diff);
