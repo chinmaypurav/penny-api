@@ -88,3 +88,57 @@ it('changes account balances on transfer update', function (int $caBefore, int $
         'amount' => $aAfter,
     ]);
 })->with('update transfer');
+
+dataset('update account', function () {
+    return [
+        [1, 2, 3000, 1000, 2000, 3000], // same ids
+        [1, 3, 3000, 1000, -1000, 6000], // changed creditor_id
+        [3, 2, 3000, 4000, 2000, 0], // changed debtor_id
+        [2, 1, 3000, 7000, -4000, 3000], // inter change
+    ];
+});
+
+it('changes account balances on transfer account update',
+    function (?int $debtorId, ?int $creditorId, int $tAmount, int $a1Amount, int $a2Amount, int $a3Amount) {
+
+        $a1 = Account::factory()->for($this->user)->create(['id' => 1, 'balance' => 1000]);
+        $a2 = Account::factory()->for($this->user)->create(['id' => 2, 'balance' => 2000]);
+        $a3 = Account::factory()->for($this->user)->create(['id' => 3, 'balance' => 3000]);
+
+        $transfer = Transfer::factory()
+            ->for($a1, 'debtorAccount')
+            ->for($a2, 'creditorAccount')
+            ->createQuietly([
+                'amount' => 3000,
+            ]);
+
+        $payload = array_filter([
+            'creditor_id' => $creditorId,
+            'debtor_id' => $debtorId,
+            'amount' => $tAmount,
+        ]);
+
+        actingAs($this->user)
+            ->patchJson('api/transfers/'.$transfer->id, $payload)
+            ->assertOk();
+
+        $this->assertDatabaseHas(Transfer::class, [
+            'id' => $transfer->id,
+            'amount' => $tAmount,
+        ]);
+
+        $this->assertDatabaseHas(Account::class, [
+            'id' => $a1->id,
+            'balance' => $a1Amount,
+        ]);
+
+        $this->assertDatabaseHas(Account::class, [
+            'id' => $a2->id,
+            'balance' => $a2Amount,
+        ]);
+
+        $this->assertDatabaseHas(Account::class, [
+            'id' => $a3->id,
+            'balance' => $a3Amount,
+        ]);
+    })->with('update account');
