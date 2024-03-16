@@ -21,6 +21,11 @@ class Transfer extends Model
         'completed' => 'boolean',
     ];
 
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
     public function creditorAccount(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'creditor_id');
@@ -29,10 +34,5 @@ class Transfer extends Model
     public function debtorAccount(): BelongsTo
     {
         return $this->belongsTo(Account::class, 'debtor_id');
-    }
-
-    public function user(): BelongsTo
-    {
-        return $this->belongsTo(User::class);
     }
 }
