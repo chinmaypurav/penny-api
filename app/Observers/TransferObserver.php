@@ -22,6 +22,7 @@ readonly class TransferObserver
     {
         $oldAmount = $transfer->getOriginal('amount');
         $newAmount = $transfer->getAttribute('amount');
+        $diff = 0;
 
         if ($transfer->isDirty('amount')) {
             $diff = $oldAmount - $newAmount;
@@ -34,7 +35,7 @@ readonly class TransferObserver
             $newAccount = Account::find($transfer->getAttribute('creditor_id'));
 
             $this->accountService->decrement($oldAccount, $oldAmount);
-            $this->accountService->increment($newAccount, $newAmount);
+            $this->accountService->increment($newAccount, $newAmount + $diff);
         }
 
         if ($transfer->isDirty('debtor_id')) {
@@ -42,7 +43,7 @@ readonly class TransferObserver
             $newAccount = Account::find($transfer->getAttribute('debtor_id'));
 
             $this->accountService->increment($oldAccount, $oldAmount);
-            $this->accountService->decrement($newAccount, $newAmount);
+            $this->accountService->decrement($newAccount, $newAmount + $diff);
         }
 
     }
