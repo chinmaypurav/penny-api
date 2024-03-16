@@ -20,11 +20,11 @@ readonly class TransferObserver
 
     public function updating(Transfer $transfer): void
     {
-        if ($transfer->isDirty('amount')) {
-            $originalAmount = $transfer->getOriginal('amount');
-            $modifiedAmount = $transfer->getAttribute('amount');
-            $diff = $originalAmount - $modifiedAmount;
+        $oldAmount = $transfer->getOriginal('amount');
+        $newAmount = $transfer->getAttribute('amount');
 
+        if ($transfer->isDirty('amount')) {
+            $diff = $oldAmount - $newAmount;
             $transfer->debtorAccount()->increment('balance', $diff);
             $transfer->creditorAccount()->decrement('balance', $diff);
         }
@@ -33,16 +33,16 @@ readonly class TransferObserver
             $oldAccount = Account::find($transfer->getOriginal('creditor_id'));
             $newAccount = Account::find($transfer->getAttribute('creditor_id'));
 
-            $this->accountService->decrement($oldAccount, $transfer->amount);
-            $this->accountService->increment($newAccount, $transfer->amount);
+            $this->accountService->decrement($oldAccount, $oldAmount);
+            $this->accountService->increment($newAccount, $newAmount);
         }
 
         if ($transfer->isDirty('debtor_id')) {
             $oldAccount = Account::find($transfer->getOriginal('debtor_id'));
             $newAccount = Account::find($transfer->getAttribute('debtor_id'));
 
-            $this->accountService->increment($oldAccount, $transfer->amount);
-            $this->accountService->decrement($newAccount, $transfer->amount);
+            $this->accountService->increment($oldAccount, $oldAmount);
+            $this->accountService->decrement($newAccount, $newAmount);
         }
 
     }
