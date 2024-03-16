@@ -43,7 +43,7 @@ it('changes account balances on transfer create', function () {
     ]);
 });
 
-dataset('update transfer', function () {
+dataset('transfer amount change', function () {
     return [
         [1000, 1000, 4000, 4000, null, 3000], // No amount
         [1000, 1000, 4000, 4000, 3000, 3000], // same amount
@@ -87,9 +87,9 @@ it('changes account balances on transfer update', function (int $caBefore, int $
         'id' => $transfer->id,
         'amount' => $aAfter,
     ]);
-})->with('update transfer');
+})->with('transfer amount change');
 
-dataset('update account', function () {
+dataset('transfer account change', function () {
     return [
         [1, 2, 3000, 1000, 2000, 3000], // same ids
         [1, 3, 3000, 1000, -1000, 6000], // changed creditor_id
@@ -142,4 +142,4 @@ it('changes account balances on transfer account update',
             'id' => $a3->id,
             'balance' => $a3Amount,
         ]);
-    })->with('update account');
+    })->with('transfer account change');
