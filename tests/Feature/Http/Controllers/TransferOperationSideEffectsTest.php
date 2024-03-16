@@ -94,8 +94,8 @@ dataset('update account', function () {
         [1, 2, 3000, 1000, 2000, 3000], // same ids
         [1, 3, 3000, 1000, -1000, 6000], // changed creditor_id
         [3, 2, 3000, 4000, 2000, 0], // changed debtor_id
-        [2, 1, 3000, 7000, -4000, 3000], // inter change
-        // [2, 1, 5000, 9000, -6000, 3000], // inter change and amount change
+        [2, 1, 3000, 7000, -4000, 3000], // inter change with amount same
+        [2, 1, 5000, 9000, -6000, 3000], // inter change and amount change
     ];
 });
 
