@@ -28,5 +28,17 @@ it('return all transactions', function () {
     actingAs($this->user)
         ->getJson('api/transactions')
         ->assertOk()
+        ->assertJsonStructure([
+            'transactions' => [
+                '*' => [
+                    'transaction_type',
+                    'account_name',
+                    'category_name',
+                    'description',
+                    'amount',
+                    'transacted_at',
+                ],
+            ],
+        ])
         ->assertJsonCount(5, 'transactions');
 });
