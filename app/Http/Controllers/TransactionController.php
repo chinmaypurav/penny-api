@@ -16,7 +16,7 @@ class TransactionController extends Controller
         $transactions = collect()
             ->merge($incomeService->index(Auth::id()))
             ->merge($expenseService->index(Auth::id()))
-            ->sort(fn (Income|Expense $model) => $model->transacted_at->getTimestamp());
+            ->sortBy(fn (Income|Expense $model) => $model->transacted_at->getTimestamp());
 
         return TransactionCollection::make($transactions);
     }
