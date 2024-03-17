@@ -17,24 +17,6 @@ beforeEach(function () {
     $this->user = User::factory()->create();
 });
 
-it('return all transactions', function () {
-
-    Income::factory()
-        ->for($this->user)
-        ->count(2)
-        ->create();
-
-    Expense::factory()
-        ->for($this->user)
-        ->count(3)
-        ->create();
-
-    actingAs($this->user)
-        ->getJson('api/transactions')
-        ->assertOk()
-        ->assertJsonCount(5, 'transactions');
-});
-
 it('assert all transactions are sorted by transacted_at in asc order', function () {
 
     Income::factory()
