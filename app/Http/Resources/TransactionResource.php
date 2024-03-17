@@ -20,8 +20,8 @@ class TransactionResource extends JsonResource
             'account_name' => $this->whenLoaded('account', fn () => $this->account->name),
             'category_name' => $this->whenLoaded('category', fn () => $this->category->name),
             'description' => $this->description,
-            'amount' => number_format($this->amount, 2),
-            'transacted_at' => $this->transacted_at,
+            'amount' => $this->amount,
+            'transacted_at' => $this->transacted_at->toIso8601ZuluString(),
         ];
     }
 }

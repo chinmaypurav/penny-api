@@ -3,19 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\TransactionCollection;
+use App\Models\Expense;
+use App\Models\Income;
 use App\Services\ExpenseService;
 use App\Services\IncomeService;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TransactionController extends Controller
 {
-    public function __invoke(IncomeService $incomeService, ExpenseService $expenseService, Request $request)
+    public function __invoke(IncomeService $incomeService, ExpenseService $expenseService)
     {
         $transactions = collect()
-            ->merge($incomeService->index($request->user()))
-            ->merge($expenseService->index($request->user()))
-            ->sort(fn (Model $model) => $model->transacted_at->getTimestamp());
+            ->merge($incomeService->index(Auth::id()))
+            ->merge($expenseService->index(Auth::id()))
+            ->sortBy(fn (Income|Expense $model) => $model->transacted_at->getTimestamp());
 
         return TransactionCollection::make($transactions);
     }

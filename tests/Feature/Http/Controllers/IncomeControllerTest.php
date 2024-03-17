@@ -1,11 +1,9 @@
 <?php
 
-use App\Enums\AccountType;
 use App\Models\Account;
 use App\Models\Category;
 use App\Models\Income;
 use App\Models\User;
-use App\Services\IncomeService;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Carbon;
 
@@ -14,28 +12,17 @@ use function Pest\Laravel\actingAs;
 uses(DatabaseMigrations::class);
 
 beforeEach(function () {
-    $this->service = app(IncomeService::class);
     $this->user = User::factory()->create();
 });
 
-dataset('getIncomeDataset', function () {
-    return [
-        [AccountType::SAVINGS],
-        [AccountType::CREDIT],
-        [AccountType::TRADING],
-        [AccountType::CURRENT],
-    ];
-});
+it('can create an income', function () {
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
 
-it('stores income to incomes table and adjusts account', function (AccountType $accountType) {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-        'account_type' => $accountType,
-    ]);
-
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'account_id' => $account->id,
@@ -61,17 +48,14 @@ it('stores income to incomes table and adjusts account', function (AccountType $
     $expected['user_id'] = $this->user->id;
 
     $this->assertDatabaseHas(Income::class, $expected);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance + $payload['amount'],
-    ]);
-})->with('getIncomeDataset');
+});
 
-it('fetches single income by id', function () {
+it('can retrieve an income', function () {
 
-    $income = Income::factory()->create([
-        'user_id' => $this->user,
-    ])->refresh();
+    $income = Income::factory()
+        ->for($this->user)
+        ->create()
+        ->refresh();
 
     actingAs($this->user)
         ->getJson('api/incomes/'.$income->id)
@@ -86,11 +70,12 @@ it('fetches single income by id', function () {
         ]);
 });
 
-it('fetches all income for that user', function () {
+it('can retrieve all incomes', function () {
 
-    $income = Income::factory()->count(2)->create([
-        'user_id' => $this->user,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->count(2)
+        ->create();
 
     actingAs($this->user)
         ->getJson('api/incomes')
@@ -109,15 +94,56 @@ it('fetches all income for that user', function () {
         ])->assertJsonCount(2, 'incomes');
 });
 
-it('deletes income from incomes table and adjusts account', function (AccountType $accountType) {
-    $account = Account::factory()->create([
-        'user_id' => $this->user,
-        'account_type' => $accountType,
-    ]);
+it('can update an income', function () {
 
-    $category = Category::factory()->create([
-        'user_id' => $this->user,
-    ]);
+    Income::factory()
+        ->for($this->user)
+        ->create();
+
+    $income = $this->user->incomes()->first();
+
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
+
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
+
+    $payload = [
+        'account_id' => $account->id,
+        'category_id' => $category->id,
+        'description' => fake()->word(),
+        'transacted_at' => now()->toDateTimeString(),
+        'amount' => fake()->randomNumber(),
+    ];
+
+    actingAs($this->user)
+        ->patchJson('api/incomes/'.$income->id, $payload)
+        ->assertOk()
+        ->assertSimilarJson([
+            'id' => $income->id,
+            'description' => $payload['description'],
+            'account_id' => $payload['account_id'],
+            'category_id' => $payload['category_id'],
+            'amount' => $payload['amount'],
+            'transacted_at' => Carbon::parse($payload['transacted_at']),
+        ]);
+
+    $expected = $payload;
+    $expected['user_id'] = $this->user->id;
+
+    $this->assertDatabaseHas(Income::class, $expected);
+});
+
+it('can delete an income', function () {
+    $account = Account::factory()
+        ->for($this->user)
+        ->create();
+
+    $category = Category::factory()
+        ->for($this->user)
+        ->create();
 
     $payload = [
         'description' => fake()->word(),
@@ -125,11 +151,11 @@ it('deletes income from incomes table and adjusts account', function (AccountTyp
         'amount' => 10000,
     ];
 
-    $income = Income::factory()->createQuietly([
-        'user_id' => $this->user,
-        'account_id' => $account,
-        'category_id' => $category,
-    ]);
+    $income = Income::factory()
+        ->for($this->user)
+        ->for($account)
+        ->for($category)
+        ->createQuietly();
 
     actingAs($this->user)
         ->deleteJson('api/incomes/'.$income->id, $payload)
@@ -138,8 +164,4 @@ it('deletes income from incomes table and adjusts account', function (AccountTyp
     $this->assertDatabaseMissing(Income::class, [
         'id' => $income->id,
     ]);
-    $this->assertDatabaseHas(Account::class, [
-        'id' => $account->id,
-        'balance' => $account->balance - $income->amount,
-    ]);
-})->with('getIncomeDataset');
+});

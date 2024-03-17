@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class IncomeController extends Controller
 {
-    public function __construct(protected IncomeService $incomeService)
+    public function __construct(private readonly IncomeService $incomeService)
     {
         $this->authorizeResource(Income::class);
     }
