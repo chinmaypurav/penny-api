@@ -29,12 +29,19 @@ dataset('getInvalidData', function () {
         ['creditor_id', ['creditor_id' => 'a1']],
         ['creditor_id', ['creditor_id' => []]],
         ['creditor_id', ['creditor_id' => 3]],
+        ['debtor_id', ['debtor_id' => null]],
+        ['debtor_id', ['debtor_id' => 'a1']],
+        ['debtor_id', ['debtor_id' => []]],
+        ['debtor_id', ['debtor_id' => 3]],
         ['transacted_at', ['transacted_at' => null]],
         ['transacted_at', ['transacted_at' => []]],
         ['transacted_at', ['transacted_at' => 'string']],
         ['description', ['description' => null]],
         ['description', ['description' => []]],
         ['description', ['description' => Str::random(256)]],
+        ['amount', ['amount' => null]],
+        ['amount', ['amount' => 'a1']],
+        ['amount', ['amount' => []]],
     ];
 });
 
