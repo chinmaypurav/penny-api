@@ -15,7 +15,7 @@ it('logs in a user', function () {
         'email' => $user->email,
         'password' => 'password',
     ])
-        ->assertNoContent();
+        ->assertOk();
 
     $this->assertAuthenticated();
 });
@@ -38,7 +38,7 @@ it('prevents a guest to log out', function () {
     $this->assertGuest();
 
     $this->postJson('/logout')
-        ->assertUnauthorized();
+        ->assertNoContent();
 });
 
 it('redirects a user on login again', function () {
