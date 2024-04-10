@@ -7,7 +7,9 @@ RUN addgroup --gid 1000 penny && adduser --disabled-password --gecos "" --ingrou
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN docker-php-ext-install pdo_mysql
+RUN apt update && apt install -y libzip-dev
+
+RUN docker-php-ext-install pdo_mysql zip
 
 RUN a2enmod rewrite
 
