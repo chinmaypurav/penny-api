@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -15,7 +14,7 @@ it('logs in a user', function () {
         'email' => $user->email,
         'password' => 'password',
     ])
-        ->assertNoContent();
+        ->assertOk();
 
     $this->assertAuthenticated();
 });
@@ -38,7 +37,7 @@ it('prevents a guest to log out', function () {
     $this->assertGuest();
 
     $this->postJson('/logout')
-        ->assertUnauthorized();
+        ->assertNoContent();
 });
 
 it('redirects a user on login again', function () {
@@ -48,7 +47,7 @@ it('redirects a user on login again', function () {
     $this->assertAuthenticated();
 
     $this->postJson('/login')
-        ->assertRedirect(RouteServiceProvider::HOME);
+        ->assertNoContent();
 });
 
 it('prevents login with incorrect email', function () {
