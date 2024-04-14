@@ -7,7 +7,7 @@ RUN addgroup --gid 1000 penny && adduser --disabled-password --gecos "" --ingrou
 
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-RUN apt update && apt install -y libzip-dev
+RUN apt update && apt install -y libzip-dev zip unzip 7zip
 
 RUN docker-php-ext-install pdo_mysql zip
 
